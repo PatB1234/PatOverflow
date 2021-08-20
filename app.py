@@ -80,3 +80,12 @@ def auth_error():
 
     return RedirectResponse("/ui/404.html", status.HTTP_302_FOUND)
 
+@app.get("/questions")
+def get_question():
+
+    return get_questions_from_db()
+
+@app.post("/question")
+def post_questions(question, username):
+
+    add_question_to_db(question ,username)

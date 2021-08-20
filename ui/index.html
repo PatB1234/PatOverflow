@@ -9,5 +9,32 @@
     <link rel = "stylesheet" href = "style.css">
 </head>
 <body>
+
+    <ul id = "questions"></ul>
+    <script src = "https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src = "cookie.min.js"></script>
+    <script>
+        const token = Cookies.get('token');
+        const elements ={
+
+            questions: document.getElementById("questions"),
+            headers: { 'headers': { 'Authorization': `Bearer ${token}` } }     
+        }
+        getQuestions()
+        function getQuestions(event) {
+
+        axios.get(`/questions`, elements.headers)
+        .then(function (response) {
+            elements.questions.innerHTML = response.data.map((v) => {
+
+                return `<a href = "answers.html"><li>${v.item}</li></a>`
+            
+            }).join("\n")
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        }
+    </script>
 </body>
 </html>

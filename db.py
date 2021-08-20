@@ -12,7 +12,7 @@ class ChatData(BaseModel):
 
     date: Optional[str]
     name: str
-    
+
 class UserData(BaseModel):
     
     username: str
@@ -24,7 +24,7 @@ pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
 def create_tables():
     database = driver.connect(DATABASE_URL)
     cursor = database.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS QUESTIONS (QUESTION TEXT, NAME TEXT, DATE TEXT, ID varchar(6));")
+    cursor.execute("CREATE TABLE IF NOT EXISTS QUESTIONS (QUESTION TEXT, NAME TEXT, DATE TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS ANSWERS (ID varchar(6), ANSWER TEXT, NAME TEXT, DATE TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS USERS (PhoneNumber TEXT, Password TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS BANNEDUSERS (PhoneNumber TEXT);")
@@ -130,3 +130,19 @@ def gen_pwd(username, password):
     cursor.execute(f"INSERT INTO USERS VALUES ('{username}', '{password}')")
     database.commit()
     return unHashedPassword
+
+
+def  add_question_to_db(question, username):
+
+    database = driver.connect(DATABASE_URL)
+    cursor = database.cursor()
+    cursor.execute(f"INSERT INTO QUESTIONS (QUESTION, NAME, DATE) VALUES ('{question}','{username}','{datetime.utcnow()}');")
+    database.commit()
+
+def get_questions_from_db():
+
+    database = driver.connect(DATABASE_URL)
+    cursor = database.cursor()
+    result =  cursor.execute(f"SELECT * FROM QUESTIONS;")
+    res = result.fetchall()
+    return res
