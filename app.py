@@ -30,11 +30,6 @@ def get_admin(token = Depends(oath2_scheme)):
 def clear_db():
     return clear_table()
 
-@app.post("/message/{room}")
-def post_message(room: str, message: Message ,username = Depends(get_user)):
-
-    return post_message_to_room(room, message, username)
-
 @app.post("/login")
 def post_login(username: str = Form(...), password: str = Form(...), action: str = Form(...)):
     UserData.user = username
@@ -79,11 +74,6 @@ def post_admin_login(username: str = Form(...), password: str = Form(...)):
 def no_admin_token():
     
     response = RedirectResponse("/ui/404.html", status.HTTP_302_FOUND)
-
-@app.get("/message/{room}")
-def get_message(room: str, username = Depends(get_user)):
-
-    return get_message_from_room(room)
 
 @app.post("/error")
 def auth_error():
