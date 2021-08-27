@@ -86,6 +86,7 @@ def get_question():
     return get_questions_from_db()
 
 @app.post("/question")
-def post_questions(question, username):
+def post_questions(question, username = Depends(get_user)):
 
-    add_question_to_db(question ,username)
+    print(question, username)
+    add_question_to_db(question, username)
