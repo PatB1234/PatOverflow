@@ -18,6 +18,9 @@ class UserData(BaseModel):
     username: str
     password: str
 
+class Question(BaseModel):
+    question: str
+
 SECRET_KEY = 'F91BBAEA73D19B9DA6A1D4A9AC3F5'
 ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
@@ -132,11 +135,11 @@ def gen_pwd(username, password):
     return unHashedPassword
 
 
-def  add_question_to_db(question, username):
+def  add_question_to_db(question: Question, username):
 
     database = driver.connect(DATABASE_URL)
     cursor = database.cursor()
-    cursor.execute(f"INSERT INTO QUESTIONS (QUESTION, NAME, DATE) VALUES ('{question}','{username}','{datetime.utcnow()}');")
+    cursor.execute(f"INSERT INTO QUESTIONS (QUESTION, NAME, DATE) VALUES ('{question.question}','{username}','{datetime.utcnow()}');")
     database.commit()
 
 def get_questions_from_db():

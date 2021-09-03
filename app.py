@@ -9,6 +9,9 @@ from fastapi.security import OAuth2PasswordBearer
 from db import *
 from forgotPassword import *
 
+class Question(BaseModel):
+    question: str
+
 app = FastAPI()
 app.mount("/ui", StaticFiles(directory = "ui"), name = "ui")
 oath2_scheme = OAuth2PasswordBearer(tokenUrl = "/token")
@@ -86,7 +89,7 @@ def get_question():
     return get_questions_from_db()
 
 @app.post("/question")
-def post_questions(question, username = Depends(get_user)):
+def post_questions(question: Question, username = Depends(get_user)):
 
     print(question, username)
     add_question_to_db(question, username)

@@ -9,9 +9,18 @@
     <link rel = "stylesheet" href = "style.css">
 </head>
 <body>
+    
+    <div class = "row">
 
-    <ul id = "questions"></ul>
-    <input type = "text" class = "form-control" id = "newQuestion" onkeyup = "addItem(event)">
+        <div class = "col-md-8">
+
+            <input type = "text" class = "form-control" id = "newQuestion" onkeyup = "addItem(event)">
+        </div>
+        <div class = "col-md-8">
+
+            <ul id = "questions"></ul>
+        </div>
+    </div>
 
     <script src = "https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src = "cookie.min.js"></script>
