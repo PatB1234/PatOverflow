@@ -1,3 +1,4 @@
+import re
 import sqlite3 as driver
 from sqlite3.dbapi2 import Cursor
 from pydantic import BaseModel
@@ -24,11 +25,27 @@ class Question(BaseModel):
 SECRET_KEY = 'F91BBAEA73D19B9DA6A1D4A9AC3F5'
 ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
+
+def generate_question_id():
+
+    database = driver.connect(DATABASE_URL)
+    cursor = database.cursor()
+    id = random.randint(10000000, 99999999)
+    while True:
+        qID = cursor.execute(f"SELECT ID FROM  QUESTIONS WHERE ID = '{id}';")
+        qID = qID.fetchall()
+        if (len(qID) > 0):
+
+            id = random.randint(10000000, 99999999)
+        else:
+
+            return id
+
 def create_tables():
     database = driver.connect(DATABASE_URL)
     cursor = database.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS QUESTIONS (QUESTION TEXT, NAME TEXT, DATE TEXT);")
-    cursor.execute("CREATE TABLE IF NOT EXISTS ANSWERS (ID varchar(6), ANSWER TEXT, NAME TEXT, DATE TEXT);")
+    cursor.execute("CREATE TABLE IF NOT EXISTS QUESTIONS (QUESTION TEXT, NAME TEXT, DATE TEXT, ID INT);")
+    cursor.execute("CREATE TABLE IF NOT EXISTS ANSWERS (ID INT, ANSWER TEXT, NAME TEXT, DATE TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS USERS (PhoneNumber TEXT, Password TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS BANNEDUSERS (PhoneNumber TEXT);")
     cursor.execute("CREATE TABLE IF NOT EXISTS ADMIN (Email TEXT, Password TEXT);")

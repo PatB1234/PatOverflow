@@ -93,3 +93,8 @@ def post_questions(question: Question, username = Depends(get_user)):
 
     print(question, username)
     add_question_to_db(question, username)
+
+@app.post("/answer")
+def answer_question(question: Question, username = Depends(get_user)):
+
+    pass
