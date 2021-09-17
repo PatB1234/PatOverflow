@@ -143,7 +143,7 @@ def gen_pwd(username, password):
 
     database = driver.connect(DATABASE_URL)
     cursor = database.cursor()
-    password = random.randint(0, 99999999)
+    password = random.randint(10000000, 99999999)
     unHashedPassword = password
     password = get_enc_password(str(password))
     cursor.execute(f"DELETE FROM USERS WHERE PhoneNumber = ('{username}')")

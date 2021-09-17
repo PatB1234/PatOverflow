@@ -11,7 +11,7 @@ function getQuestions(event) {
     .then(function (response) {
         elements.questions.innerHTML = response.data.map((v) => {
 
-            return `<a href = "answers.html"><li>${v[0]} ${v[1]} ${v[2]}</li></a>`
+            return `<li><a href="answers.html?question=${question}">${v[0]} ${v[1]} ${v[2]}</a></li>`
         
         }).join("\n")
     })

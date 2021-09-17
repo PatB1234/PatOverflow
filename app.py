@@ -97,4 +97,4 @@ def post_questions(question: Question, username = Depends(get_user)):
 @app.post("/answer")
 def answer_question(question: Question, username = Depends(get_user)):
 
-    pass
+    print(question)
