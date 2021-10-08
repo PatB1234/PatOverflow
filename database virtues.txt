@@ -1,0 +1,4 @@
+R = READ EVERYTHING
+E = Edit Update an item
+A = ADD add one item
+D = Delete one Item
