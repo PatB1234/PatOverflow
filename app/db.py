@@ -37,7 +37,7 @@ USERS = [
 
 QUESTIONS = [
 
-    Questions(id = 1, title = "Why am I havong so much fun?", detail = "Ia m more detail and I am hainfg fun writing this aaa spelling mistake well I do not care.", author = "Pratyush"),
+    Questions(id = 1, title = "Why am I having so much fun?", detail = "I am more detail and I am having fun writing this aaa spelling mistake well I do not care.", author = "Pratyush"),
     Questions(id = 2, title = "How make money?", detail = "Make Money", author = "Jeff"),
     Questions(id = 3, title = "How to make planet?", detail = "Make planet", author = "elon")
 ]
@@ -49,6 +49,11 @@ ANSWERS = [
     Answers(id = 3, question_id = 3, detail ="I am detail", author = "Pratyush")
 ]
 
+
+def get_last_id(list_of_id):
+
+    return list_of_id[-1].id
+
 #User function
 def get_users():
 
@@ -58,15 +63,34 @@ def add_users(id, email, password, name):
 
     USERS.append(User(id = id, email = email, password = password, name = name))
 
-def remove_user(user_object):
+def get_user_object_from_email(user_inputed_email):
 
-    USERS.remove(user_object)
+    for user in USERS:
 
-def edit_user(user_to_edit, new_user_object):
+        if user.email == user_inputed_email:
 
-    USERS[user_to_edit] = new_user_object
+            return user
+    
+    return BLANK_USER
 
+def remove_user(email):
 
+    user_object_from_email = get_user_object_from_email(email)
+
+    if user_object_from_email != BLANK_USER:
+
+        USERS.remove(user_object_from_email)
+
+def edit_user(email, name = "", password = ""):
+
+    user_to_edit = get_user_object_from_email(email)
+    if name != "":
+
+        user_to_edit.name = name
+    
+    if password != "":
+
+        user_to_edit.password = password
 
 #Question functions
 def get_questions():
@@ -77,28 +101,83 @@ def add_question(id, title, detail, author):
 
     QUESTIONS.append(Questions(id = id, title = title, detail = detail, author = author))
 
-def remove_questions(questions_object):
 
-    QUESTIONS.remove(questions_object)
+def get_question_object_from_id(question_id):
 
-def edit_questions(question_to_edit, new_question_object):
+    for question in QUESTIONS:
 
-    USERS[question_to_edit] = new_question_object
+        if question.id == question_id:
 
+            return question
+    
+    return BLANK_QUESTION
+
+def remove_question(id):
+
+    question_object_from_id = get_question_object_from_id(id)
+
+    if question_object_from_id != BLANK_QUESTION:
+
+        QUESTIONS.remove(question_object_from_id)
+    
+def edit_question(id, answer = "", vote = 0):
+
+    question_to_edit = get_question_object_from_id(id)
+    if answer != "":
+
+        question_to_edit.answers = answer
+    
+    question_to_edit.votes += vote
 
 #Answers functions
 def get_answers():
 
     return ANSWERS
 
-def add_answers(id, question_id, detail, author):
 
-    ANSWERS.append(Answers(id = id, question_id = question_id, detail = detail, author = author))
+def add_answers(question_id, detail, author):
 
-def remove_answer(answers_object):
+    ANSWERS.append(Answers(id = get_last_id(ANSWERS) + 1, question_id = question_id, detail = detail, author = author))
+    question_to_update = get_question_object_from_id(question_id)
+    if question_to_update != BLANK_QUESTION:
 
-    ANSWERS.remove(answers_object)
+        question_to_update.answers += 1
 
-def edit_answers(answers_to_edit, new_answers_object):
+def get_answer_object_from_id(user_inputed_id):
 
-    USERS[answers_to_edit] = new_answers_object
+    for answer in ANSWERS:
+
+        if answer.id == user_inputed_id:
+
+            return answer
+    
+    return BLANK_ANSWERS
+
+def remove_answer(id):
+
+    answer_object_from_id = get_answer_object_from_id(id)
+
+    if answer_object_from_id != BLANK_ANSWERS:
+
+        ANSWERS.remove(answer_object_from_id)
+
+def edit_answer(id, votes = 0):
+
+    answer_to_edit = get_answer_object_from_id(id)
+    answer_to_edit.votes += votes
+
+for a in range(len(ANSWERS)):
+
+    print(ANSWERS[a])
+
+print("\n \n")
+add_answers(1, "I do not know", "Pratyush")
+add_answers(1, "I do not know", "Pratyush")
+add_answers(1, "I do not know", "Pratyush")
+add_answers(1, "I do not know", "Pratyush")
+
+for b in range(len(ANSWERS)):
+
+    print(ANSWERS[b])
+
+print("\n \n")
