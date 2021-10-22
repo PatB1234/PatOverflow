@@ -28,11 +28,11 @@ def change_user(email, name, password):
     return db.edit_user(email, name, password)
 
 
-#Questiosn functions
+#Question functions
 @app.get("/get_questions")
 def get_questions():
 
-    db.get_questions()
+    return db.get_questions()
 
 @app.post("/add_question")
 def add_question(title, detail, author):
@@ -54,7 +54,7 @@ def edit_question(id: int, vote: int):
 @app.get("/get_answers")
 def get_answers():
 
-    print(db.get_answers())
+    return db.get_answers()
 
 @app.post("/add_answers")
 def add_answers(question_id: int, detail: str, author: str):
