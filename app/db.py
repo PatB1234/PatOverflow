@@ -55,13 +55,13 @@ def get_last_id(list_of_id):
     return list_of_id[-1].id
 
 #User function
-def get_users():
+def get_user_from_db():
 
     return USERS
 
-def add_users(id, email, password, name):
+def add_users(email, password, name):
 
-    USERS.append(User(id = id, email = email, password = password, name = name))
+    USERS.append(User(id = get_last_id(USERS) + 1, email = email, password = password, name = name))
 
 def get_user_object_from_email(user_inputed_email):
 
@@ -97,9 +97,9 @@ def get_questions():
 
     return QUESTIONS
 
-def add_question(id, title, detail, author):
+def add_question(title, detail, author):
 
-    QUESTIONS.append(Questions(id = id, title = title, detail = detail, author = author))
+    QUESTIONS.append(Questions(id = get_last_id(QUESTIONS) + 1, title = title, detail = detail, author = author))
 
 
 def get_question_object_from_id(question_id):
@@ -120,14 +120,12 @@ def remove_question(id):
 
         QUESTIONS.remove(question_object_from_id)
     
-def edit_question(id, answer = "", vote = 0):
+def edit_question(id, vote = 0):
 
     question_to_edit = get_question_object_from_id(id)
-    if answer != "":
-
-        question_to_edit.answers = answer
+    if question_to_edit != BLANK_QUESTION:
     
-    question_to_edit.votes += vote
+        question_to_edit.votes += vote
 
 #Answers functions
 def get_answers():
@@ -165,19 +163,4 @@ def edit_answer(id, votes = 0):
 
     answer_to_edit = get_answer_object_from_id(id)
     answer_to_edit.votes += votes
-
-for a in range(len(ANSWERS)):
-
-    print(ANSWERS[a])
-
-print("\n \n")
-add_answers(1, "I do not know", "Pratyush")
-add_answers(1, "I do not know", "Pratyush")
-add_answers(1, "I do not know", "Pratyush")
-add_answers(1, "I do not know", "Pratyush")
-
-for b in range(len(ANSWERS)):
-
-    print(ANSWERS[b])
-
-print("\n \n")
+    
