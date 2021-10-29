@@ -10,6 +10,16 @@ app = FastAPI()
 app.mount("/ui", StaticFiles(directory="html"), name="static")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+@app.get("/")
+def get_route():
+    
+    return templates.TemplateResponse("index.html", {"request": {}})
+    
+@app.get("/login")
+def get_route_login():
+    
+    return templates.TemplateResponse("login.html", {"request": {}})
+
 
 #User functions
 @app.get("/get_users")
@@ -18,9 +28,10 @@ def get_users():
     return db.get_user_from_db()
 
 @app.post("/add_user")
-def add_user(email, password, name):
+def add_user(name: str = Form(...), email: str = Form(...), password: str = Form(...)):
 
-    return db.add_users(email, password, name)
+    db.add_users(email, password, name)
+    return templates.TemplateResponse("index.html", {"request": {}})
 
 @app.post("/edit_user")
 def change_user(email, name, password):
