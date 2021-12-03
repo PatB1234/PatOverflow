@@ -1,0 +1,28 @@
+{% extends "template.html" %} {% block content %}
+
+<label>Question Title</label>
+<input name = "title" id = "title"></input>
+<br/>
+
+<label>Question Detail</label>
+<input name = "detail" id = "detail"></input>
+<br/>
+<button type = "submit" onclick="addQuestionFromJS()">Submit</button>
+
+<script>
+
+    function addQuestionFromJS() {
+        
+        axios.post("/add_question", {"title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${Cookies.get("token")}`}})
+        .then(function (response) {
+
+        elements.message.value = "";
+        })
+
+        .catch(function (error) {
+
+            console.log(error);
+        });
+    }
+</script>
+{% endblock %}

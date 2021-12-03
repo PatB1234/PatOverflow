@@ -1,19 +1,25 @@
 from fastapi import FastAPI, Form, status, Depends
+from fastapi.security.oauth2 import OAuth2
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from . import db
+from . import db, auth
 
 templates = Jinja2Templates(directory="app/templates")
 app = FastAPI()
 app.mount("/ui", StaticFiles(directory="html"), name="static")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+def get_cookied_response(email: str, password: str):
+    response = RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+    response.set_cookie(key="email", value=auth.get_jwt_token_from_email(email))
+    return response
+
 @app.get("/")
 def get_route():
     
-    return templates.TemplateResponse("index.html", {"request": {}})
+    return templates.TemplateResponse("questions.html", {"request": {}})
     
 @app.get("/login")
 def get_route_login():
@@ -21,7 +27,12 @@ def get_route_login():
     return templates.TemplateResponse("login.html", {"request": {}})
 
 
-#User functions
+#User 
+def get_current_user(token: str = Depends(oauth2_scheme)):
+
+    print(token)
+    return auth.get_user_from_token(token)
+
 @app.get("/get_users")
 def get_users():
 
@@ -31,7 +42,8 @@ def get_users():
 def add_user(name: str = Form(...), email: str = Form(...), password: str = Form(...)):
 
     db.add_users(email, password, name)
-    return templates.TemplateResponse("index.html", {"request": {}})
+    get_cookied_response(email, password)
+    return templates.TemplateResponse("questions.html", {"request": {}})
 
 @app.post("/edit_user")
 def change_user(email, name, password):
@@ -46,9 +58,10 @@ def get_questions():
     return db.get_questions()
 
 @app.post("/add_question")
-def add_question(title, detail, author):
+def add_question(header):
 
-    db.add_question(title, detail, author)
+    print(f"{header}")
+    #db.add_question(title, detail, get_current_user(token))
 
 @app.post("/remove_question")
 def remove_question(id: int):
