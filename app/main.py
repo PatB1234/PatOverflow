@@ -11,9 +11,14 @@ app = FastAPI()
 app.mount("/ui", StaticFiles(directory="html"), name="static")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+def get_retry_login_response():
+
+    return RedirectResponse("/login?error=True", status_code=status.HTTP_302_FOUND)
+
 def get_cookied_response(email: str, password: str):
     response = RedirectResponse("/", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="email", value=auth.get_jwt_token_from_email(email))
+    print(response)
     return response
 
 @app.get("/")
@@ -27,11 +32,12 @@ def get_route_login():
     return templates.TemplateResponse("login.html", {"request": {}})
 
 
-#User 
+#Users
 def get_current_user(token: str = Depends(oauth2_scheme)):
 
     print(token)
-    return auth.get_user_from_token(token)
+    #print(db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""}))
+    #return db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""})
 
 @app.get("/get_users")
 def get_users():
@@ -41,9 +47,22 @@ def get_users():
 @app.post("/add_user")
 def add_user(name: str = Form(...), email: str = Form(...), password: str = Form(...)):
 
-    db.add_users(email, password, name)
-    get_cookied_response(email, password)
-    return templates.TemplateResponse("questions.html", {"request": {}})
+    return (
+
+        get_cookied_response(email, password)
+        if auth.is_valid_user(
+
+            db.User(
+
+                id = -1,
+                email = email,
+                password = password,
+                name = name
+            )
+        )
+
+        else get_retry_login_response()
+    )
 
 @app.post("/edit_user")
 def change_user(email, name, password):
@@ -58,10 +77,10 @@ def get_questions():
     return db.get_questions()
 
 @app.post("/add_question")
-def add_question(header):
+def add_question(title: str, detail: str, token: str = Depends(get_current_user)):
 
-    print(f"{header}")
-    #db.add_question(title, detail, get_current_user(token))
+    print(token)
+    db.add_question(title, detail, token)
 
 @app.post("/remove_question")
 def remove_question(id: int):

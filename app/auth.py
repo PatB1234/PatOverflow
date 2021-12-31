@@ -1,12 +1,13 @@
 from jose import jwt, JWTError
 from . import db, main
+import os
 from passlib.context import CryptContext
 from datetime import date, datetime, timedelta
 
-SECRET_KEY = 'F91BBAEA73D19B9DA6A1D4A9AC3F5'
-ALGORITHM = "HS256"
+SECRET_KEY = os.environ.get("APP_SECRET_KEY", "DefaultKey")
 pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
 
+'''
 def get_user_from_token(token):
 
     payload = jwt.decode(token, SECRET_KEY)
@@ -23,7 +24,45 @@ def get_user_token(username):
     }
 
     return jwt.encode(to_encode, SECRET_KEY)
-
+'''
 
 def get_jwt_token_from_email(email: str) -> str:
     return jwt.encode({"email": email}, SECRET_KEY)
+
+def get_email_from_jwt_token(token: str) -> str:
+    try:
+
+        print(jwt.decode(token, SECRET_KEY)["email"])
+        print(SECRET_KEY)
+        return jwt.decode(token, SECRET_KEY)["email"]
+
+    except:
+
+        return db.BLANK_USER.email
+
+def get_hashed_password(password: str) -> str:
+    
+    return pwd_context.hash(password)
+
+def is_auth_user_password(email, password) -> bool:
+    try:
+
+        return pwd_context.verify(password, db.get_user_from_email(email).password)
+    except:
+        return False
+
+
+def is_valid_user(user: db.User) -> bool:
+
+    if is_auth_user_password(user.email, user.password):
+
+        return True
+        
+    elif db.get_user_from_email(user.email).id == -1:
+        
+        db.add_users(user.email, get_hashed_password(user.password), user.name)
+        return True
+
+    else:
+
+        return False

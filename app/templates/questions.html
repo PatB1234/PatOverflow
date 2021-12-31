@@ -11,12 +11,16 @@
 
 <script>
 
+    const token = Cookies.get('email');
+
+    console.log(token);
+
     function addQuestionFromJS() {
         
-        axios.post("/add_question", {"title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${Cookies.get("token")}`}})
+        axios.post("/add_question", {"title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${token}`}})
         .then(function (response) {
-
-        elements.message.value = "";
+            
+            console.log(response);
         })
 
         .catch(function (error) {

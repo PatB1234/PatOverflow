@@ -55,11 +55,19 @@ def get_last_id(list_of_id):
     return list_of_id[-1].id
 
 #User function
+
+
+def get_user_from_email(email: str) -> User:
+
+    return next((user for user in USERS if user.email == email), BLANK_USER)
+
 def get_user_from_db():
 
     return USERS
 
 def add_users(email, password, name):
+
+    print(get_last_id(USERS) + 1, email, password, name)
 
     USERS.append(User(id = get_last_id(USERS) + 1, email = email, password = password, name = name))
 
