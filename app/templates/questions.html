@@ -17,7 +17,7 @@
 
     function addQuestionFromJS() {
         
-        axios.post("/add_question", {"title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${token}`}})
+        axios.post("/add_question", { "title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${token}`}})
         .then(function (response) {
             
             console.log(response);

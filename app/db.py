@@ -1,4 +1,16 @@
 from pydantic import BaseModel
+from jose import jwt, JWTError
+import os
+from passlib.context import CryptContext
+from datetime import date, datetime, timedelta
+
+SECRET_KEY = os.environ.get("APP_SECRET_KEY", "DefaultKey")
+pwd_context = CryptContext(schemes = ["bcrypt"], deprecated = "auto")
+
+
+def hash_password(password: str) -> str:
+    
+    return pwd_context.hash(password)
 
 class User(BaseModel):
 
@@ -30,9 +42,9 @@ BLANK_ANSWERS = Answers(id = -1, question_id = -1, detail ="", author = "")
 
 USERS = [
 
-    User(id = 1, email = "bindalpratyush2010@gmail.com", password = "1234", name = "Pratyush"),
-    User(id = 2, email = "bezos@amazon.com", password = "amazon", name = "Jeff"),
-    User(id = 3, email = "musk@tesla.com", password = "vroom", name = "elon")
+    User(id = 1, email = "bindalpratyush2010@gmail.com", password = hash_password(str(1234)), name = "Pratyush"),
+    User(id = 2, email = "bezos@amazon.com", password = hash_password("amazon"), name = "Jeff"),
+    User(id = 3, email = "musk@tesla.com", password = hash_password("vroom"), name = "elon")
 ]
 
 QUESTIONS = [

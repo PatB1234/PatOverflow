@@ -47,6 +47,7 @@ def get_hashed_password(password: str) -> str:
 def is_auth_user_password(email, password) -> bool:
     try:
 
+        print(password, db.get_user_from_email(email).password)
         return pwd_context.verify(password, db.get_user_from_email(email).password)
     except:
         return False

@@ -9,7 +9,7 @@ from . import db, auth
 templates = Jinja2Templates(directory="app/templates")
 app = FastAPI()
 app.mount("/ui", StaticFiles(directory="html"), name="static")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
 
 def get_retry_login_response():
 
@@ -33,11 +33,12 @@ def get_route_login():
 
 
 #Users
+@app.get("/get_curent_user")
 def get_current_user(token: str = Depends(oauth2_scheme)):
 
     print(token)
-    #print(db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""}))
-    #return db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""})
+    print(db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""}))
+    return db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""})
 
 @app.get("/get_users")
 def get_users():
@@ -77,9 +78,9 @@ def get_questions():
     return db.get_questions()
 
 @app.post("/add_question")
-def add_question(title: str, detail: str, token: str = Depends(get_current_user)):
+def add_question(title: str, detail: str, token = Depends(get_current_user)):
 
-    print(token)
+    print(title, detail, token)
     db.add_question(title, detail, token)
 
 @app.post("/remove_question")
