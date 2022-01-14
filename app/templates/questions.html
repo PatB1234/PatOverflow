@@ -1,32 +1,59 @@
 {% extends "template.html" %} {% block content %}
-
-<label>Question Title</label>
-<input name = "title" id = "title"></input>
 <br/>
+<div align = "left">
 
-<label>Question Detail</label>
-<input name = "detail" id = "detail"></input>
+    <form method="post" action="/add_question">
+
+        <label>Title: </label>
+        <input name = "title"></input>
+        
+        <br/>
+
+        <label>Detail: </label>
+        <input name = "detail"></input>
+
+        <br/>
+
+        <textarea readonly id = "textareaToken" name = "token" style="display: none;"></textarea>
+        <br/>
+        <input type="submit" value="Submit" name="action"></input>
+    </form>
+</div>
+
+</div>
 <br/>
-<button type = "submit" onclick="addQuestionFromJS()">Submit</button>
+{% for question in questions %}
+<div class="accordion" id="accordionBasic">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          
+            {{ question.title }}
+            <br/>
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionBasic">
+        <div class="accordion-body">
 
+            {{ question.detail }}
+            <br/>
+        </div>
+      </div>
+    </div>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionBasic">
+        <div class="accordion-body">
+        
+            By. {{ question.author }}
+        </div>
+      </div>
+    </div>
+{% endfor %}
 <script>
 
     const token = Cookies.get('email');
 
     console.log(token);
 
-    function addQuestionFromJS() {
-        
-        axios.post("/add_question", { "title": title.value, "detail": detail.value, headers: { Authorization: `Bearer ${token}`}})
-        .then(function (response) {
-            
-            console.log(response);
-        })
-
-        .catch(function (error) {
-
-            console.log(error);
-        });
-    }
+    document.getElementById("textareaToken").innerHTML = token;
 </script>
 {% endblock %}

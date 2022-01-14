@@ -79,8 +79,6 @@ def get_user_from_db():
 
 def add_users(email, password, name):
 
-    print(get_last_id(USERS) + 1, email, password, name)
-
     USERS.append(User(id = get_last_id(USERS) + 1, email = email, password = password, name = name))
 
 def get_user_object_from_email(user_inputed_email):
@@ -120,7 +118,6 @@ def get_questions():
 def add_question(title, detail, author):
 
     QUESTIONS.append(Questions(id = get_last_id(QUESTIONS) + 1, title = title, detail = detail, author = author))
-
 
 def get_question_object_from_id(question_id):
 

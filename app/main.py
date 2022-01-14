@@ -18,7 +18,6 @@ def get_retry_login_response():
 def get_cookied_response(email: str, password: str):
     response = RedirectResponse("/", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="email", value=auth.get_jwt_token_from_email(email))
-    print(response)
     return response
 
 @app.get("/")
@@ -36,8 +35,6 @@ def get_route_login():
 @app.get("/get_curent_user")
 def get_current_user(token: str = Depends(oauth2_scheme)):
 
-    print(token)
-    print(db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""}))
     return db.get_user_from_email(auth.get_email_from_jwt_token(token)).copy(update={"password": ""})
 
 @app.get("/get_users")
@@ -75,13 +72,17 @@ def change_user(email, name, password):
 @app.get("/get_questions")
 def get_questions():
 
-    return db.get_questions()
+    return templates.TemplateResponse(
+
+        "questions.html", {"request": {}, "questions": db.get_questions()}
+    )
 
 @app.post("/add_question")
-def add_question(title: str, detail: str, token = Depends(get_current_user)):
+def add_question(title: str = Form(...), detail: str = Form(...), token: str = Form(...)):
 
-    print(title, detail, token)
-    db.add_question(title, detail, token)
+    usertDetails = get_current_user(token)
+    db.add_question(title, detail, usertDetails.name)
+    return RedirectResponse("/get_questions", status_code=status.HTTP_302_FOUND)
 
 @app.post("/remove_question")
 def remove_question(id: int):

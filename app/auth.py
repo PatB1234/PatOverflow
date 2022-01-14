@@ -32,8 +32,6 @@ def get_jwt_token_from_email(email: str) -> str:
 def get_email_from_jwt_token(token: str) -> str:
     try:
 
-        print(jwt.decode(token, SECRET_KEY)["email"])
-        print(SECRET_KEY)
         return jwt.decode(token, SECRET_KEY)["email"]
 
     except:
@@ -47,7 +45,6 @@ def get_hashed_password(password: str) -> str:
 def is_auth_user_password(email, password) -> bool:
     try:
 
-        print(password, db.get_user_from_email(email).password)
         return pwd_context.verify(password, db.get_user_from_email(email).password)
     except:
         return False
