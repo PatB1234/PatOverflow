@@ -1,0 +1,70 @@
+{% extends "template.html" %} {% block content %}
+<br/>
+
+<div class="accordion" id="accordionBasic">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          
+            {{ questionAnswer.title }}
+            <br/>
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionBasic">
+        <div class="accordion-body">
+
+            {{ questionAnswer.detail }}
+            <br/>
+        </div>
+      </div>
+    </div>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionBasic">
+        <div class="accordion-body">
+        
+            By. {{ questionAnswer.author }} 
+            Votes. {{ questionAnswer.votes }} 
+            Answers. {{ questionAnswer.answers }}
+        </div>
+      </div>
+    </div>
+
+
+{% for answer in answers %}
+
+<div class="accordion" id="accordionBasic">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          
+            {{ answer.detail }}
+            <br/>
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show overflowDetail" aria-labelledby="headingOne" data-bs-parent="#accordionBasic">
+        <div class="accordion-body">
+
+            By. {{ answer.author }}
+            <br/>
+        </div>
+      </div>
+    </div>
+    </div>
+{% endfor %}
+
+<h2>Add a answer!</p>
+<form method="post" action="/add_answers">
+
+  <textarea name = "question_id" style="display: none;">{{ questionAnswer.id }}</textarea>
+  <br/>
+  <label>Your answer: </label>
+  <input name = "detail"></input>
+  <textarea name = "token" id = "author"  style="display: none;"></textarea>
+  <input type="submit" value="Submit" name="action"></input>
+</form>
+
+<script>
+
+  const token = Cookies.get('email');
+  document.getElementById("author").innerHTML = token; 
+</script>
+{% endblock %}

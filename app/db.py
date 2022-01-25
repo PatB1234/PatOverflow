@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from pydantic import BaseModel
 from jose import jwt, JWTError
 import os
@@ -180,4 +181,28 @@ def edit_answer(id, votes = 0):
 
     answer_to_edit = get_answer_object_from_id(id)
     answer_to_edit.votes += votes
+
+
+
+def get_question_answer(id):
+
     
+    questions = get_questions()
+    answers = get_answers()
+
+    needQuestion = None
+    needAnswer = []
+
+    for question in questions:
+
+        if str(question.id) == str(id):
+
+            needQuestion = question
+
+    for answer in answers:
+
+        if str(answer.question_id) == str(id):
+
+            needAnswer.append(answer)
+
+    return needQuestion, needAnswer

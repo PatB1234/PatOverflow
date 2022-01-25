@@ -9,7 +9,7 @@ from . import db, auth
 templates = Jinja2Templates(directory="app/templates")
 app = FastAPI()
 app.mount("/ui", StaticFiles(directory="html"), name="static")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token", auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def get_retry_login_response():
 
@@ -30,7 +30,19 @@ def get_route_login():
     
     return templates.TemplateResponse("login.html", {"request": {}})
 
+@app.get("/answers")
+def get_route_question(id: str):
 
+    return send_data_from_id(id)
+
+def send_data_from_id(id: int):
+
+    needQuestion, needAnswer = db.get_question_answer(id)
+
+    return templates.TemplateResponse(
+
+        "answers.html", {"request": {}, "questionAnswer": needQuestion, "answers": needAnswer}
+    )
 #Users
 @app.get("/get_curent_user")
 def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -102,10 +114,16 @@ def get_answers():
     return db.get_answers()
 
 @app.post("/add_answers")
-def add_answers(question_id: int, detail: str, author: str):
+def add_answers(question_id: int = Form(...), detail = Form(...), token = Form(...)):
 
-    db.add_answers(question_id, detail, author)
+    userDetails = get_current_user(token)
+    db.add_answers(question_id, detail, userDetails.name)
+    needQuestion, needAnswer = db.get_question_answer(question_id)
 
+    return templates.TemplateResponse(
+
+        "answers.html", {"request": {}, "questionAnswer": needQuestion, "answers": needAnswer}
+    )
 @app.post("/remove_answer")
 def remove_answer(id: int):
 
