@@ -102,9 +102,16 @@ def remove_question(id: int):
     db.remove_question(id)
 
 @app.post("/edit_question")
-def edit_question(id: int, vote: int):
+def edit_question(id: int = Form(...)):
 
-    db.edit_question(id, vote)
+    res = db.get_question_object_from_id(int(id))
+    db.edit_question(int(id), res.votes+1)
+    needQuestion, needAnswer = db.get_question_answer(int(id))
+
+    return templates.TemplateResponse(
+
+        "answers.html", {"request": {}, "questionAnswer": needQuestion, "answers": needAnswer}
+    )
 
 
 #Answer functions
@@ -130,6 +137,13 @@ def remove_answer(id: int):
     db.remove_answer(id)
 
 @app.post("/edit_answer")
-def edit_answer(id: int, votes: int):
+def edit_answer(id: int = Form(...), questionID: int = Form(...)):
 
-    db.edit_answer(id, votes)
+    res = db.get_answer_object_from_id(int(id))
+    db.edit_answer(int(id), res.votes+1)
+    needQuestion, needAnswer = db.get_question_answer(int(questionID))
+    
+    return templates.TemplateResponse(
+
+        "answers.html", {"request": {}, "questionAnswer": needQuestion, "answers": needAnswer}
+    )

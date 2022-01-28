@@ -142,8 +142,8 @@ def edit_question(id, vote = 0):
 
     question_to_edit = get_question_object_from_id(id)
     if question_to_edit != BLANK_QUESTION:
-    
-        question_to_edit.votes += vote
+
+        question_to_edit.votes = vote
 
 #Answers functions
 def get_answers():
@@ -180,8 +180,9 @@ def remove_answer(id):
 def edit_answer(id, votes = 0):
 
     answer_to_edit = get_answer_object_from_id(id)
-    answer_to_edit.votes += votes
+    if answer_to_edit != BLANK_ANSWERS:
 
+        answer_to_edit.votes = votes
 
 
 def get_question_answer(id):

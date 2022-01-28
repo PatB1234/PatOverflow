@@ -28,6 +28,11 @@
       </div>
     </div>
 
+<form method="post" action="/edit_question">
+
+  <textarea name = "id" style="display: none;">{{ questionAnswer.id }}</textarea>
+  <input type="submit" value="Vote!" name="action"></input>
+</form>
 
 {% for answer in answers %}
 
@@ -45,11 +50,19 @@
 
             By. {{ answer.author }}
             <br/>
+            Votes. {{ answer.votes }}
         </div>
       </div>
     </div>
     </div>
+    <form method="post" action="/edit_answer">
+
+      <textarea name = "id" style="display: none;">{{ answer.id }}</textarea>
+      <textarea name = "questionID" style="display: none;">{{ questionAnswer.id }}</textarea>
+      <input type="submit" value="Vote for this answer!" name="action"></input>
+    </form>    
 {% endfor %}
+
 
 <h2>Add a answer!</p>
 <form method="post" action="/add_answers">
