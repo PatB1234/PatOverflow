@@ -16,6 +16,8 @@ pip install passlib<br/>
 pip install bcrypt<br/>
 pip install pydantic<br/>
 pip install python-multipart<br/>
+pip install Jinja2 <br/>
+pip install python-jose <br/>
 To run this prgram use the command below <br/>
 uvicorn app.main:app <br/>
 
