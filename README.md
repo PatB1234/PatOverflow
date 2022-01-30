@@ -3,7 +3,7 @@
 Instructions to install
 You will need a python 3.10.1 installation or higher
 
-#FOR WINDOWS
+# FOR WINDOWS
 Download all the files
 Delete the file env
 Open a terminal 
