@@ -1,5 +1,5 @@
 from jose import jwt, JWTError
-from . import db, main
+from . import sqldb, main
 import os
 from passlib.context import CryptContext
 from datetime import date, datetime, timedelta
@@ -36,7 +36,7 @@ def get_email_from_jwt_token(token: str) -> str:
 
     except:
 
-        return db.BLANK_USER.email
+        return sqldb.BLANK_USER.email
 
 def get_hashed_password(password: str) -> str:
     
@@ -45,20 +45,20 @@ def get_hashed_password(password: str) -> str:
 def is_auth_user_password(email, password) -> bool:
     try:
 
-        return pwd_context.verify(password, db.get_user_from_email(email).password)
+        return pwd_context.verify(password, sqldb.get_user_from_email(email).password)
     except:
         return False
 
 
-def is_valid_user(user: db.User) -> bool:
+def is_valid_user(user: sqldb.User) -> bool:
 
     if is_auth_user_password(user.email, user.password):
 
         return True
         
-    elif db.get_user_from_email(user.email).id == -1:
+    elif sqldb.get_user_from_email(user.email).id == -1:
         
-        db.add_users(user.email, get_hashed_password(user.password), user.name)
+        sqldb.add_user(user.email, get_hashed_password(user.password), user.name)
         return True
 
     else:
