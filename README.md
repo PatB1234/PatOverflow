@@ -27,6 +27,9 @@ Open the link and make sure to login <br/>
 There are a few predefined users so do not try and use those email as the app will not let you log in due to wrong login information <br/>
 You can create a new account simply by usng you own email <br/>
 From there, it is self explantory <br/>
-Please not that since the program currently uses variables, every time you reload the program any question you added ar answered along with the users will be gone. I am working on implementing a database <br/>
+Every time you reload the program any question you added a answered along with anys users will be gone. I am working on implementing a database <br/>
+
+# Update <br/>
+# DATABASE WORKKSSKSKSKSKKS <br/>
 
 To stop the program, go into your terminal and use CTRL-C.
