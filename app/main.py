@@ -110,7 +110,6 @@ def get_questions():
 def add_question(title: str = Form(...), detail: str = Form(...), token: str = Form(...)):
 
     usertDetails = get_current_user(token)
-    print(usertDetails)
     sqldb.add_question(title, detail, usertDetails.name)
     return RedirectResponse("/get_questions", status_code=status.HTTP_302_FOUND)
 
@@ -143,6 +142,7 @@ def add_answers(question_id: int = Form(...), detail = Form(...), token = Form(.
 
     userDetails = get_current_user(token)
     sqldb.add_answers(question_id, detail, userDetails.name)
+    sqldb.edit_question_answer_num(question_id, sqldb.get_question_object_from_id(question_id).answers+1)
     needQuestion, needAnswer = sqldb.get_question_answer(question_id)
 
     return templates.TemplateResponse(

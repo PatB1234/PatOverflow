@@ -176,6 +176,13 @@ def edit_question(id, vote = 0):
     cursor.execute(f"UPDATE QUESTIONS SET VOTES = '{vote}' WHERE ID = '{id}'")
     database.commit()
 
+def edit_question_answer_num(id, anwerCount = 0):
+
+    database = driver.connect(DATABASE_URL)
+    cursor = database.cursor()
+    cursor.execute(f"UPDATE QUESTIONS SET ANSWERS = '{anwerCount}' WHERE ID = '{id}'")
+    database.commit()
+
 def clear_questions():
 
     database = driver.connect(DATABASE_URL)
